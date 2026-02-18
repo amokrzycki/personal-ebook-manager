@@ -23,7 +23,7 @@ interface BookCardProps {
   onDelete: (book: Book) => void;
 }
 
-/** Komponent okładki z graceful fallback */
+/** Cover component with graceful fallback */
 const CoverImage: React.FC<{ url: string | null; title: string }> = ({ url, title }) => {
   if (url) {
     return (
@@ -36,7 +36,7 @@ const CoverImage: React.FC<{ url: string | null; title: string }> = ({ url, titl
     );
   }
 
-  // Fallback: gradient z ikoną książki
+  // Fallback: gradient with book icon
   return (
     <Box
       sx={{
@@ -57,7 +57,7 @@ const CoverImage: React.FC<{ url: string | null; title: string }> = ({ url, titl
   );
 };
 
-/** Wizualizacja oceny gwiazdkowej (1–5) */
+/** Star rating visualization (1–5) */
 const StarRating: React.FC<{ rating: number }> = ({ rating }) => (
   <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.25 }}>
     {[1, 2, 3, 4, 5].map((star) => (
@@ -76,14 +76,12 @@ const StarRating: React.FC<{ rating: number }> = ({ rating }) => (
   </Box>
 );
 
-export const BookCard: React.FC<BookCardProps> = ({
-  book,
-  onEditProgress,
-  onEditDetails,
-  onDelete,
-}) => {
+const calculateProgress = (currentPage: number, totalPages: number) =>
+  totalPages > 0 ? Math.round((currentPage / totalPages) * 100) : 0;
+
+export const BookCard = ({ book, onEditProgress, onEditDetails, onDelete }: BookCardProps) => {
   const showProgress = book.status === 'in_progress' && book.totalPages !== null;
-  const progress = book.readingProgressPercent ?? 0;
+  const progress = calculateProgress(book.currentPage, book.totalPages ?? 0);
 
   return (
     <Card
@@ -94,11 +92,11 @@ export const BookCard: React.FC<BookCardProps> = ({
         position: 'relative',
       }}
     >
-      {/* ── Okładka ──────────────────────────────────────────────── */}
+      {/* Cover */}
       <CoverImage url={book.coverUrl} title={book.title} />
 
       <CardContent sx={{ flexGrow: 1, pb: 1 }}>
-        {/* ── Seria ──────────────────────────────────────────────── */}
+        {/* Series */}
         {book.series && (
           <Typography variant="caption" color="primary.main" sx={{ fontWeight: 600 }}>
             {book.series}
@@ -106,7 +104,7 @@ export const BookCard: React.FC<BookCardProps> = ({
           </Typography>
         )}
 
-        {/* ── Tytuł ──────────────────────────────────────────────── */}
+        {/* Title */}
         <Typography
           variant="h6"
           sx={{
@@ -124,12 +122,12 @@ export const BookCard: React.FC<BookCardProps> = ({
           {book.title}
         </Typography>
 
-        {/* ── Autor ──────────────────────────────────────────────── */}
+        {/* Author */}
         <Typography variant="body2" color="text.secondary" noWrap>
           {book.author}
         </Typography>
 
-        {/* ── Status + ocena ─────────────────────────────────────── */}
+        {/* Grade + Status */}
         <Box sx={{ mt: 1, display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
           <Chip
             label={ReadingStatusLabels[book.status]}
@@ -140,7 +138,7 @@ export const BookCard: React.FC<BookCardProps> = ({
           {book.rating !== null && <StarRating rating={book.rating} />}
         </Box>
 
-        {/* ── Pasek postępu czytania ──────────────────────────────── */}
+        {/* Reading progress bar */}
         {showProgress && (
           <Box sx={{ mt: 1.5 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
@@ -162,7 +160,7 @@ export const BookCard: React.FC<BookCardProps> = ({
           </Box>
         )}
 
-        {/* ── Tagi gatunkowe ──────────────────────────────────────── */}
+        {/* Genre tags */}
         {book.genres && book.genres.length > 0 && (
           <Box sx={{ mt: 1, display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
             {book.genres.slice(0, 3).map((genre) => (
@@ -178,7 +176,7 @@ export const BookCard: React.FC<BookCardProps> = ({
         )}
       </CardContent>
 
-      {/* ── Przyciski akcji ─────────────────────────────────────────── */}
+      {/* Action buttons */}
       <Box
         sx={{
           display: 'flex',

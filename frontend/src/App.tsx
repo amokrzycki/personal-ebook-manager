@@ -13,7 +13,7 @@ import {
   Toolbar,
   Typography,
 } from '@mui/material';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { BookShelf } from './components/Bookshelf';
 import { RecommendationsPanel } from './components/RecommendationsPanel';
 import { StatsDashboard } from './components/StatsDashboard';
@@ -25,14 +25,13 @@ const NAV_TABS = [
   { label: 'Rekomendacje', icon: <AutoAwesomeIcon /> },
 ];
 
-const App: React.FC = () => {
+const App = () => {
   const [activeTab, setActiveTab] = useState(0);
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
 
-      {/* ── Górny pasek nawigacyjny ──────────────────────────────── */}
       <AppBar
         position="sticky"
         elevation={0}
@@ -43,7 +42,6 @@ const App: React.FC = () => {
         }}
       >
         <Toolbar sx={{ gap: 2 }}>
-          {/* Logo */}
           <MenuBookIcon sx={{ color: 'primary.main', fontSize: 32 }} />
           <Typography
             variant="h5"
@@ -58,7 +56,6 @@ const App: React.FC = () => {
             BookShelf
           </Typography>
 
-          {/* Zakładki nawigacyjne */}
           <Tabs
             value={activeTab}
             onChange={(_, v) => setActiveTab(v)}
@@ -75,13 +72,11 @@ const App: React.FC = () => {
         </Toolbar>
       </AppBar>
 
-      {/* ── Główna treść ─────────────────────────────────────────── */}
       <Box
         component="main"
         sx={{
           minHeight: '100vh',
           bgcolor: 'background.default',
-          // Subtelny wzór z linii – imitacja faktury papieru
           backgroundImage: `
             linear-gradient(rgba(201,168,76,0.02) 1px, transparent 1px),
             linear-gradient(90deg, rgba(201,168,76,0.02) 1px, transparent 1px)

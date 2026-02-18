@@ -1,13 +1,3 @@
-/**
- * hooks/useBooks.ts
- * ─────────────────
- * Własne hooki React enkapsulujące logikę pobierania i mutacji danych.
- *
- * Wzorzec: każdy hook zarządza lokalnym stanem (loading, error, data)
- * i udostępnia funkcje do wykonania operacji CRUD.
- * Komponenty używają hooków zamiast bezpośrednio wywoływać API.
- */
-
 import { useCallback, useEffect, useState } from 'react';
 import type {
   BooksQueryParams,
@@ -20,15 +10,14 @@ import type {
 } from '../types';
 import * as api from '../api/api';
 
-// ── Stan wspólny dla hooków danych ────────────────────────────────────
+// Common state for data hooks
 interface AsyncState<T> {
   data: T | null;
   loading: boolean;
   error: string | null;
 }
 
-// ── Hook: lista książek ───────────────────────────────────────────────
-
+// Hook: list of books
 export function useBooks(initialParams?: BooksQueryParams) {
   const [state, setState] = useState<AsyncState<Book[]>>({
     data: null,
@@ -54,7 +43,7 @@ export function useBooks(initialParams?: BooksQueryParams) {
     load();
   }, [load]);
 
-  /** Odświeża listę z nowymi parametrami zapytania */
+  /** Refreshes the list with new query parameters */
   const refresh = useCallback(
     (newParams?: BooksQueryParams) => {
       const merged = { ...params, ...newParams };
@@ -64,7 +53,7 @@ export function useBooks(initialParams?: BooksQueryParams) {
     [params, load],
   );
 
-  /** Dodaje książkę i odświeża listę */
+  /** Adds a book and refreshes the list */
   const addBook = useCallback(
     async (payload: CreateBookPayload): Promise<Book> => {
       const book = await api.createBook(payload);
@@ -74,7 +63,7 @@ export function useBooks(initialParams?: BooksQueryParams) {
     [load],
   );
 
-  /** Aktualizuje metadane i odświeża listę */
+  /** Updates metadata and refreshes the list */
   const editBook = useCallback(
     async (id: string, payload: UpdateBookPayload): Promise<Book> => {
       const book = await api.updateBook(id, payload);
@@ -84,7 +73,7 @@ export function useBooks(initialParams?: BooksQueryParams) {
     [load],
   );
 
-  /** Usuwa książkę i odświeża listę */
+  /** Deletes the book and refreshes the list */
   const removeBook = useCallback(
     async (id: string): Promise<void> => {
       await api.deleteBook(id);
@@ -93,10 +82,10 @@ export function useBooks(initialParams?: BooksQueryParams) {
     [load],
   );
 
-  /** Aktualizuje postęp czytania lokalnie (optimistic update) + sync z API */
+  /** Updates reading progress locally (optimistic update) + sync with API */
   const updateBookProgress = useCallback(
     async (id: string, payload: UpdateProgressPayload): Promise<void> => {
-      // Optimistic update: od razu zmieniamy dane w UI
+      // Optimistic update
       setState((s) => ({
         ...s,
         data:
@@ -114,7 +103,7 @@ export function useBooks(initialParams?: BooksQueryParams) {
       // Sync z API w tle
       try {
         await api.updateProgress(id, payload);
-        await load(); // odświeżamy żeby zsynchronizować status (np. FINISHED)
+        await load();
       } catch (err) {
         // Przy błędzie cofamy optimistic update
         await load();
@@ -136,7 +125,7 @@ export function useBooks(initialParams?: BooksQueryParams) {
   };
 }
 
-// ── Hook: statystyki biblioteki ───────────────────────────────────────
+// Hook: statystyki biblioteki
 
 export function useStats() {
   const [state, setState] = useState<AsyncState<LibraryStats>>({
@@ -155,7 +144,7 @@ export function useStats() {
   return state;
 }
 
-// ── Hook: rekomendacje ────────────────────────────────────────────────
+// Hook: rekomendacje
 
 export function useRecommendations() {
   const [state, setState] = useState<AsyncState<Recommendation[]>>({

@@ -47,8 +47,6 @@ export interface Book {
   rating: number | null;
   createdAt: string;
   updatedAt: string;
-  /** Wyliczane przez backend: (currentPage / totalPages) * 100 */
-  readingProgressPercent: number;
 }
 
 // ── DTO do tworzenia / aktualizacji ──────────────────────────────────
