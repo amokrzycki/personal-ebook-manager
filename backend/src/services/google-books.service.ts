@@ -39,6 +39,8 @@ export class GoogleBooksService {
   constructor(private readonly config: ConfigService) {
     this.apiKey = this.config.get<string>('GOOGLE_BOOKS_API_KEY');
 
+    console.log(`Google Books API Key: ${this.apiKey}`);
+
     // Create a dedicated Axios instance with a base URL and a timeout of 10 seconds.
     this.http = axios.create({
       baseURL: 'https://www.googleapis.com/books/v1',
@@ -46,7 +48,7 @@ export class GoogleBooksService {
     });
   }
 
-   /**
+  /**
    * Searches for a book by ISBN (preferred) or title and returns
    * a partial Book object ready to be merged with user data.
    *
@@ -62,7 +64,9 @@ export class GoogleBooksService {
       const params: Record<string, string> = { q, maxResults: '1' };
       if (this.apiKey) params.key = this.apiKey;
 
-      const { data } = await this.http.get<GoogleBooksResponse>('/volumes', { params });
+      const { data } = await this.http.get<GoogleBooksResponse>('/volumes', {
+        params,
+      });
 
       if (!data.totalItems || !data.items?.length) {
         this.logger.warn(`Google Books: brak wyników dla zapytania "${query}"`);
@@ -86,8 +90,12 @@ export class GoogleBooksService {
     const info = volume.volumeInfo;
 
     // Try to extract ISBN-13, and if it is missing, ISBN-10.
-    const isbn13 = info.industryIdentifiers?.find((id) => id.type === 'ISBN_13')?.identifier;
-    const isbn10 = info.industryIdentifiers?.find((id) => id.type === 'ISBN_10')?.identifier;
+    const isbn13 = info.industryIdentifiers?.find(
+      (id) => id.type === 'ISBN_13',
+    )?.identifier;
+    const isbn10 = info.industryIdentifiers?.find(
+      (id) => id.type === 'ISBN_10',
+    )?.identifier;
 
     // The publication date can be in the format “2001,” “2001-06,” or “2001-06-15.”
     const publishedYear = info.publishedDate
@@ -96,7 +104,8 @@ export class GoogleBooksService {
 
     // Cover: we prefer higher resolution (thumbnail > smallThumbnail)
     // and replace http:// with https:// for security reasons
-    const rawCover = info.imageLinks?.thumbnail ?? info.imageLinks?.smallThumbnail;
+    const rawCover =
+      info.imageLinks?.thumbnail ?? info.imageLinks?.smallThumbnail;
     const coverUrl = rawCover?.replace(/^http:\/\//, 'https://');
 
     return {
