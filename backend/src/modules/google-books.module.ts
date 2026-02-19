@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import {GoogleBooksService} from "../services/google-books.service";
+import { GoogleBooksService } from '../services/google-books.service';
 
 @Module({
   providers: [GoogleBooksService],

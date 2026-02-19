@@ -19,7 +19,7 @@ interface GoogleBooksVolume {
       smallThumbnail?: string;
     };
     industryIdentifiers?: Array<{
-      type: 'ISBN_10' | 'ISBN_13' | string;
+      type: string;
       identifier: string;
     }>;
   };
@@ -58,7 +58,7 @@ export class GoogleBooksService {
   async fetchMetadata(query: string): Promise<Partial<Book> | null> {
     try {
       // Distinguish between ISBN queries (only numbers + hyphens, if applicable) and title queries.
-      const isIsbn = /^[\d\-]{10,17}$/.test(query.trim());
+      const isIsbn = /^[\d-]{10,17}$/.test(query.trim());
       const q = isIsbn ? `isbn:${query}` : `intitle:${query}`;
 
       const params: Record<string, string> = { q, maxResults: '1' };

@@ -21,9 +21,9 @@ async function bootstrap() {
   // Global validation pipe
   app.useGlobalPipes(
     new ValidationPipe({
-      whitelist: true,          // removes fields not defined in DTO
+      whitelist: true, // removes fields not defined in DTO
       forbidNonWhitelisted: true, // throws an error for unknown fields
-      transform: true,          // automatically casts types (string > number)
+      transform: true, // automatically casts types (string > number)
       transformOptions: {
         enableImplicitConversion: true,
       },
