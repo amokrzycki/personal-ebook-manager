@@ -10,7 +10,7 @@ import {
   Grid,
   LinearProgress,
   Skeleton,
-  Typography,
+  Typography
 } from '@mui/material';
 import React from 'react';
 import { useStats } from '../hooks/useBooks';
@@ -30,7 +30,7 @@ const StatCard: React.FC<{
           borderRadius: 2,
           bgcolor: 'rgba(201,168,76,0.1)',
           color,
-          display: 'flex',
+          display: 'flex'
         }}
       >
         {icon}
@@ -68,7 +68,7 @@ export const StatsDashboard: React.FC = () => {
 
   return (
     <Box>
-      {/* ── Główne karty statystyk ──────────────────────────────────── */}
+      {/* Main statistic cards */}
       <Grid container spacing={2} sx={{ mb: 3 }}>
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <StatCard icon={<BookIcon />} value={total} label="Wszystkich książek" />
@@ -100,11 +100,11 @@ export const StatsDashboard: React.FC = () => {
       </Grid>
 
       <Grid container spacing={2}>
-        {/* ── Rozkład statusów ─────────────────────────────────────── */}
+        {/* Statuses */}
         <Grid
           size={{
             xs: 12,
-            md: 6,
+            md: 6
           }}
         >
           <Card>
@@ -138,11 +138,11 @@ export const StatsDashboard: React.FC = () => {
           </Card>
         </Grid>
 
-        {/* ── Top gatunki ───────────────────────────────────────────── */}
+        {/* Top genres */}
         <Grid
           size={{
             xs: 12,
-            md: 6,
+            md: 6
           }}
         >
           <Card>

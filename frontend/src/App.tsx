@@ -11,9 +11,9 @@ import {
   Tabs,
   ThemeProvider,
   Toolbar,
-  Typography,
+  Typography
 } from '@mui/material';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { BookShelf } from './components/Bookshelf';
 import { RecommendationsPanel } from './components/RecommendationsPanel';
 import { StatsDashboard } from './components/StatsDashboard';
@@ -22,28 +22,26 @@ import { theme } from './theme';
 const NAV_TABS = [
   { label: 'Moja Biblioteka', icon: <LibraryBooksIcon /> },
   { label: 'Statystyki', icon: <BarChartIcon /> },
-  { label: 'Rekomendacje', icon: <AutoAwesomeIcon /> },
+  { label: 'Rekomendacje', icon: <AutoAwesomeIcon /> }
 ];
 
-const App: React.FC = () => {
+const App = () => {
   const [activeTab, setActiveTab] = useState(0);
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
 
-      {/* ── Górny pasek nawigacyjny ──────────────────────────────── */}
       <AppBar
         position="sticky"
         elevation={0}
         sx={{
           borderBottom: '1px solid',
           borderColor: 'divider',
-          bgcolor: 'background.paper',
+          bgcolor: 'background.paper'
         }}
       >
         <Toolbar sx={{ gap: 2 }}>
-          {/* Logo */}
           <MenuBookIcon sx={{ color: 'primary.main', fontSize: 32 }} />
           <Typography
             variant="h5"
@@ -52,20 +50,19 @@ const App: React.FC = () => {
               color: 'primary.main',
               fontWeight: 700,
               letterSpacing: '0.02em',
-              mr: 'auto',
+              mr: 'auto'
             }}
           >
             BookShelf
           </Typography>
 
-          {/* Zakładki nawigacyjne */}
           <Tabs
             value={activeTab}
             onChange={(_, v) => setActiveTab(v)}
             sx={{
               '& .MuiTab-root': { minHeight: 64, textTransform: 'none', fontWeight: 500 },
               '& .Mui-selected': { color: 'primary.main' },
-              '& .MuiTabs-indicator': { bgcolor: 'primary.main' },
+              '& .MuiTabs-indicator': { bgcolor: 'primary.main' }
             }}
           >
             {NAV_TABS.map((tab) => (
@@ -75,18 +72,16 @@ const App: React.FC = () => {
         </Toolbar>
       </AppBar>
 
-      {/* ── Główna treść ─────────────────────────────────────────── */}
       <Box
         component="main"
         sx={{
           minHeight: '100vh',
           bgcolor: 'background.default',
-          // Subtelny wzór z linii – imitacja faktury papieru
           backgroundImage: `
             linear-gradient(rgba(201,168,76,0.02) 1px, transparent 1px),
             linear-gradient(90deg, rgba(201,168,76,0.02) 1px, transparent 1px)
           `,
-          backgroundSize: '40px 40px',
+          backgroundSize: '40px 40px'
         }}
       >
         <Container maxWidth="xl" sx={{ py: 4 }}>

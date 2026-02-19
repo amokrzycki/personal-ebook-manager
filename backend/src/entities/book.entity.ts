@@ -96,18 +96,4 @@ export class Book {
   /** Date of the last modification */
   @UpdateDateColumn()
   updatedAt: Date;
-
-  // Virtual fields (not persisted in the database)
-
-  /**
-   * Returns reading progress percentage (0–100).
-   * Computed on the fly – not a database column.
-   */
-  get readingProgressPercent(): number {
-    if (!this.totalPages || this.totalPages === 0) return 0;
-    return Math.min(
-      100,
-      Math.round((this.currentPage / this.totalPages) * 100),
-    );
-  }
 }

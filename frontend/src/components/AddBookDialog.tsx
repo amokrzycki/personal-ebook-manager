@@ -18,7 +18,7 @@ import {
   Slider,
   TextField,
   Tooltip,
-  Typography,
+  Typography
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { previewMetadata } from '../api/api';
@@ -27,7 +27,7 @@ import type { Book, CreateBookPayload, ReadingStatus } from '../types';
 
 interface AddBookDialogProps {
   open: boolean;
-  editBook?: Book | null; // jeśli podane – tryb edycji
+  editBook?: Book | null; // if provided, dialog works in "edit" mode, otherwise in "add" mode
   onClose: () => void;
   onSubmit: (payload: CreateBookPayload) => Promise<void>;
 }
@@ -42,7 +42,7 @@ const EMPTY_FORM: CreateBookPayload = {
   tags: [],
   status: 'unread',
   currentPage: 0,
-  rating: undefined,
+  rating: undefined
 };
 
 export const AddBookDialog = ({ open, editBook, onClose, onSubmit }: AddBookDialogProps) => {
@@ -71,7 +71,7 @@ export const AddBookDialog = ({ open, editBook, onClose, onSubmit }: AddBookDial
         description: editBook.description ?? '',
         coverUrl: editBook.coverUrl ?? '',
         publishedYear: editBook.publishedYear ?? undefined,
-        publisher: editBook.publisher ?? '',
+        publisher: editBook.publisher ?? ''
       });
     } else {
       setForm(EMPTY_FORM);
@@ -81,10 +81,10 @@ export const AddBookDialog = ({ open, editBook, onClose, onSubmit }: AddBookDial
 
   const set =
     (field: keyof CreateBookPayload) =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-      setForm((f) => ({ ...f, [field]: e.target.value }));
+      (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+        setForm((f) => ({ ...f, [field]: e.target.value }));
 
-  /** Wywołanie Google Books API i scalenie wyników z formularzem */
+  /** Autofill function, downloads metadata from Google Books based on ISBN or title and fills the form */
   const handleAutofill = async () => {
     const query = autoQuery.trim() || form.isbn || form.title;
     if (!query) return;
@@ -102,7 +102,7 @@ export const AddBookDialog = ({ open, editBook, onClose, onSubmit }: AddBookDial
         publishedYear: meta.publishedYear ?? f.publishedYear,
         publisher: meta.publisher ?? f.publisher,
         genres: meta.genres?.length ? meta.genres : f.genres,
-        isbn: meta.isbn ?? f.isbn,
+        isbn: meta.isbn ?? f.isbn
       }));
     }
   };
@@ -145,14 +145,14 @@ export const AddBookDialog = ({ open, editBook, onClose, onSubmit }: AddBookDial
       <DialogTitle>{editBook ? 'Edytuj książkę' : 'Dodaj nową książkę'}</DialogTitle>
 
       <DialogContent dividers>
-        {/* ── Sekcja autouzupełniania ─────────────────────────────── */}
+        {/* Autofill section */}
         <Box
           sx={{
             mb: 3,
             p: 2,
             bgcolor: 'rgba(201,168,76,0.06)',
             borderRadius: 2,
-            border: '1px dashed rgba(201,168,76,0.3)',
+            border: '1px dashed rgba(201,168,76,0.3)'
           }}
         >
           <Typography variant="subtitle2" color="primary.main" gutterBottom>
@@ -183,11 +183,11 @@ export const AddBookDialog = ({ open, editBook, onClose, onSubmit }: AddBookDial
         </Box>
 
         <Grid container spacing={2}>
-          {/* Tytuł */}
+          {/* Title */}
           <Grid
             size={{
               xs: 12,
-              md: 8,
+              md: 8
             }}
           >
             <TextField
@@ -203,7 +203,7 @@ export const AddBookDialog = ({ open, editBook, onClose, onSubmit }: AddBookDial
           <Grid
             size={{
               xs: 12,
-              md: 8,
+              md: 8
             }}
           >
             <TextField
@@ -215,11 +215,11 @@ export const AddBookDialog = ({ open, editBook, onClose, onSubmit }: AddBookDial
             />
           </Grid>
 
-          {/* Autor */}
+          {/* Author */}
           <Grid
             size={{
               xs: 12,
-              md: 8,
+              md: 8
             }}
           >
             <TextField
@@ -231,11 +231,11 @@ export const AddBookDialog = ({ open, editBook, onClose, onSubmit }: AddBookDial
             />
           </Grid>
 
-          {/* Rok wydania */}
+          {/* Release year */}
           <Grid
             size={{
               xs: 12,
-              md: 4,
+              md: 4
             }}
           >
             <TextField
@@ -247,11 +247,11 @@ export const AddBookDialog = ({ open, editBook, onClose, onSubmit }: AddBookDial
             />
           </Grid>
 
-          {/* Seria */}
+          {/* Series */}
           <Grid
             size={{
               xs: 12,
-              md: 8,
+              md: 8
             }}
           >
             <TextField
@@ -263,11 +263,11 @@ export const AddBookDialog = ({ open, editBook, onClose, onSubmit }: AddBookDial
             />
           </Grid>
 
-          {/* Numer w serii */}
+          {/* Number of series */}
           <Grid
             size={{
               xs: 12,
-              md: 4,
+              md: 4
             }}
           >
             <TextField
@@ -279,11 +279,11 @@ export const AddBookDialog = ({ open, editBook, onClose, onSubmit }: AddBookDial
             />
           </Grid>
 
-          {/* Liczba stron */}
+          {/* Number of pages */}
           <Grid
             size={{
               xs: 12,
-              md: 4,
+              md: 4
             }}
           >
             <TextField
@@ -293,16 +293,16 @@ export const AddBookDialog = ({ open, editBook, onClose, onSubmit }: AddBookDial
               value={form.totalPages ?? ''}
               onChange={set('totalPages')}
               InputProps={{
-                endAdornment: <InputAdornment position="end">str.</InputAdornment>,
+                endAdornment: <InputAdornment position="end">str.</InputAdornment>
               }}
             />
           </Grid>
 
-          {/* URL okładki */}
+          {/* Cover URL */}
           <Grid
             size={{
               xs: 12,
-              md: 8,
+              md: 8
             }}
           >
             <TextField
@@ -318,7 +318,7 @@ export const AddBookDialog = ({ open, editBook, onClose, onSubmit }: AddBookDial
           <Grid
             size={{
               xs: 12,
-              md: 6,
+              md: 6
             }}
           >
             <FormControl fullWidth>
@@ -339,11 +339,11 @@ export const AddBookDialog = ({ open, editBook, onClose, onSubmit }: AddBookDial
             </FormControl>
           </Grid>
 
-          {/* Aktualna strona */}
+          {/* Actual page */}
           <Grid
             size={{
               xs: 12,
-              md: 6,
+              md: 6
             }}
           >
             <TextField
@@ -355,10 +355,10 @@ export const AddBookDialog = ({ open, editBook, onClose, onSubmit }: AddBookDial
             />
           </Grid>
 
-          {/* Ocena */}
+          {/* Grade */}
           <Grid
             size={{
-              xs: 12,
+              xs: 12
             }}
           >
             <Typography gutterBottom>Ocena: {form.rating ? `${form.rating}/5` : 'Brak'}</Typography>
@@ -374,17 +374,17 @@ export const AddBookDialog = ({ open, editBook, onClose, onSubmit }: AddBookDial
                 { value: 0, label: 'Brak' },
                 { value: 1, label: '1' },
                 { value: 3, label: '3' },
-                { value: 5, label: '5' },
+                { value: 5, label: '5' }
               ]}
               valueLabelDisplay="auto"
               color="primary"
             />
           </Grid>
 
-          {/* Opis */}
+          {/* Description */}
           <Grid
             size={{
-              xs: 12,
+              xs: 12
             }}
           >
             <TextField
@@ -399,17 +399,17 @@ export const AddBookDialog = ({ open, editBook, onClose, onSubmit }: AddBookDial
 
           <Grid
             size={{
-              xs: 12,
+              xs: 12
             }}
           >
             <Divider />
           </Grid>
 
-          {/* Gatunki */}
+          {/* Genres */}
           <Grid
             size={{
               xs: 12,
-              md: 6,
+              md: 6
             }}
           >
             <Typography variant="subtitle2" gutterBottom>
@@ -441,11 +441,11 @@ export const AddBookDialog = ({ open, editBook, onClose, onSubmit }: AddBookDial
             </Box>
           </Grid>
 
-          {/* Tagi */}
+          {/* Tags */}
           <Grid
             size={{
               xs: 12,
-              md: 6,
+              md: 6
             }}
           >
             <Typography variant="subtitle2" gutterBottom>

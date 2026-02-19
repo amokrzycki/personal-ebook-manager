@@ -7,7 +7,7 @@ import {
   DialogTitle,
   Slider,
   TextField,
-  Typography,
+  Typography
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import type { Book } from '../types';
@@ -50,7 +50,7 @@ export const ProgressDialog = ({ open, book, onClose, onSave }: ProgressDialogPr
               {book.title}
             </Typography>
 
-            {/* Suwak procentowy */}
+            {/* Progressbar */}
             <Typography gutterBottom>
               Postęp: <strong style={{ color: '#C9A84C' }}>{percent}%</strong>
             </Typography>
@@ -66,7 +66,7 @@ export const ProgressDialog = ({ open, book, onClose, onSave }: ProgressDialogPr
               />
             )}
 
-            {/* Pole tekstowe na numer strony */}
+            {/* Textarea for page number */}
             <TextField
               fullWidth
               type="number"

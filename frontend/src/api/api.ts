@@ -6,20 +6,18 @@ import type {
   UpdateBookPayload,
   UpdateProgressPayload,
   LibraryStats,
-  Recommendation,
+  Recommendation
 } from '../types';
-
-// ── Konfiguracja instancji Axios ──────────────────────────────────────
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL ?? 'http://localhost:3001/api/v1',
   timeout: 15_000,
-  headers: { 'Content-Type': 'application/json' },
+  headers: { 'Content-Type': 'application/json' }
 });
 
 /**
- * Interceptor odpowiedzi – normalizuje błędy do czytelnych komunikatów.
- * W produkcji można tu podpiąć globalny toast (Snackbar z MUI).
+ * Response interceptor module – normalizes errors into readable messages.
+ * In a production environment, a global toast message (Snackbar from MUI) can be connected here.
  */
 api.interceptors.response.use(
   (response) => response,
@@ -28,26 +26,24 @@ api.interceptors.response.use(
     const humanMessage = Array.isArray(serverMessage)
       ? serverMessage.join(', ')
       : (serverMessage ?? error.message);
-    // Rzucamy nowy Error z czytelnym komunikatem
+    // We throw a new Error with a clear message
     return Promise.reject(new Error(humanMessage));
-  },
+  }
 );
 
-// ── Książki ──────────────────────────────────────────────────────────
-
-/** Pobiera listę książek z opcjonalnymi filtrami */
+/** Retrieves a list of books with optional filters */
 export const fetchBooks = async (params?: BooksQueryParams): Promise<Book[]> => {
   const { data } = await api.get<Book[]>('/books', { params });
   return data;
 };
 
-/** Pobiera szczegóły jednej książki */
+/** Retrieves details of a single book */
 export const fetchBook = async (id: string): Promise<Book> => {
   const { data } = await api.get<Book>(`/books/${id}`);
   return data;
 };
 
-/** Dodaje nową książkę do biblioteki */
+/** Adds a new book to the library */
 export const createBook = async (payload: CreateBookPayload): Promise<Book> => {
   const { data } = await api.post<Book>('/books', payload);
   return data;
@@ -59,30 +55,26 @@ export const updateBook = async (id: string, payload: UpdateBookPayload): Promis
   return data;
 };
 
-/** Aktualizuje postęp czytania */
+/** Updates book metadata */
 export const updateProgress = async (id: string, payload: UpdateProgressPayload): Promise<Book> => {
   const { data } = await api.patch<Book>(`/books/${id}/progress`, payload);
   return data;
 };
 
-/** Usuwa książkę */
+/** Deletes a book */
 export const deleteBook = async (id: string): Promise<void> => {
   await api.delete(`/books/${id}`);
 };
 
-// ── Podgląd metadanych Google Books ──────────────────────────────────
-
-/** Pobiera metadane z Google Books (bez zapisu) – wypełnia formularz */
+/** Retrieves metadata from Google Books (without saving) – fills out the form */
 export const previewMetadata = async (query: string): Promise<Partial<Book> | null> => {
   try {
     const { data } = await api.post<Partial<Book>>('/books/fetch-metadata', { query });
     return data;
   } catch {
-    return null; // błąd sieci = nie blokujemy użytkownika
+    return null; // network error = we do not block the user
   }
 };
-
-// ── Statystyki i rekomendacje ─────────────────────────────────────────
 
 export const fetchStats = async (): Promise<LibraryStats> => {
   const { data } = await api.get<LibraryStats>('/books/stats');

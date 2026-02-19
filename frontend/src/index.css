@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Lato:wght@300;400;500;700&display=swap');
 @import "tailwindcss";
 
-/* Reset domyślnych marginesów */
+/* Reset default margins */
 *, *::before, *::after {
     box-sizing: border-box;
 }
@@ -13,12 +13,12 @@ html, body, #root {
     min-height: 100vh;
 }
 
-/* Płynne przewijanie */
+/* Smooth scrolling */
 html {
     scroll-behavior: smooth;
 }
 
-/* Pasek przewijania w stylu motywu */
+/* Themed scrollbar */
 ::-webkit-scrollbar {
     width: 8px;
     height: 8px;

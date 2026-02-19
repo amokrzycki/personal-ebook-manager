@@ -28,9 +28,13 @@ export class BooksService {
   async create(dto: CreateBookDto): Promise<Book> {
     // Check ISBN uniqueness if provided
     if (dto.isbn) {
-      const existing = await this.booksRepo.findOne({ where: { isbn: dto.isbn } });
+      const existing = await this.booksRepo.findOne({
+        where: { isbn: dto.isbn },
+      });
       if (existing) {
-        throw new ConflictException(`Książka z ISBN ${dto.isbn} już istnieje w bibliotece`);
+        throw new ConflictException(
+          `Książka z ISBN ${dto.isbn} już istnieje w bibliotece`,
+        );
       }
     }
 
@@ -44,8 +48,8 @@ export class BooksService {
 
     // User data (dto) has priority over autoMetadata, but we merge them to fill in any missing fields
     const book = this.booksRepo.create({
-      ...autoMetadata,   // najpierw dane z API
-      ...dto,            // potem dane użytkownika (priorytet)
+      ...autoMetadata, // najpierw dane z API
+      ...dto, // potem dane użytkownika (priorytet)
       status: dto.status ?? ReadingStatus.UNREAD,
       currentPage: dto.currentPage ?? 0,
     });
@@ -60,7 +64,13 @@ export class BooksService {
     sortBy?: SortField;
     order?: SortOrder;
   }): Promise<Book[]> {
-    const { search, status, genre, sortBy = 'createdAt', order = 'DESC' } = params ?? {};
+    const {
+      search,
+      status,
+      genre,
+      sortBy = 'createdAt',
+      order = 'DESC',
+    } = params ?? {};
 
     const where: any = {};
     if (status) where.status = status;
@@ -101,13 +111,11 @@ export class BooksService {
     Object.assign(book, dto);
 
     // Auto progress update
-    if (
-      book.totalPages &&
-      book.currentPage >= book.totalPages &&
-      book.status === ReadingStatus.IN_PROGRESS
-    ) {
+    if (book.totalPages && book.currentPage >= book.totalPages) {
       book.status = ReadingStatus.FINISHED;
-      this.logger.log(`Książka "${book.title}" automatycznie oznaczona jako przeczytana`);
+      this.logger.log(
+        `Książka "${book.title}" automatycznie oznaczona jako przeczytana`,
+      );
     }
 
     // Set status IN_PROGRESS if user updated currentPage > 0 but status is still UNREAD
@@ -125,7 +133,9 @@ export class BooksService {
     const book = await this.findOne(id);
 
     if (input.progressPercent !== undefined && book.totalPages) {
-      book.currentPage = Math.round((input.progressPercent / 100) * book.totalPages);
+      book.currentPage = Math.round(
+        (input.progressPercent / 100) * book.totalPages,
+      );
     } else if (input.currentPage !== undefined) {
       book.currentPage = input.currentPage;
     }
@@ -180,7 +190,10 @@ export class BooksService {
     return {
       total: books.length,
       byStatus,
-      avgRating: ratingCount > 0 ? Math.round((ratingSum / ratingCount) * 10) / 10 : null,
+      avgRating:
+        ratingCount > 0
+          ? Math.round((ratingSum / ratingCount) * 10) / 10
+          : null,
       totalPagesRead,
       topGenres,
     };
