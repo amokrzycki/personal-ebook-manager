@@ -6,7 +6,7 @@ import type {
   UpdateBookPayload,
   UpdateProgressPayload,
   LibraryStats,
-  Recommendation,
+  Recommendation
 } from '../types';
 import * as api from '../api/api';
 
@@ -22,7 +22,7 @@ export function useBooks(initialParams?: BooksQueryParams) {
   const [state, setState] = useState<AsyncState<Book[]>>({
     data: null,
     loading: true,
-    error: null,
+    error: null
   });
   const [params, setParams] = useState<BooksQueryParams>(initialParams ?? {});
 
@@ -36,7 +36,7 @@ export function useBooks(initialParams?: BooksQueryParams) {
         setState({ data: null, loading: false, error: (err as Error).message });
       }
     },
-    [params],
+    [params]
   );
 
   useEffect(() => {
@@ -50,7 +50,7 @@ export function useBooks(initialParams?: BooksQueryParams) {
       setParams(merged);
       return load(merged);
     },
-    [params, load],
+    [params, load]
   );
 
   /** Adds a book and refreshes the list */
@@ -60,7 +60,7 @@ export function useBooks(initialParams?: BooksQueryParams) {
       await load();
       return book;
     },
-    [load],
+    [load]
   );
 
   /** Updates metadata and refreshes the list */
@@ -70,7 +70,7 @@ export function useBooks(initialParams?: BooksQueryParams) {
       await load();
       return book;
     },
-    [load],
+    [load]
   );
 
   /** Deletes the book and refreshes the list */
@@ -79,7 +79,7 @@ export function useBooks(initialParams?: BooksQueryParams) {
       await api.deleteBook(id);
       await load();
     },
-    [load],
+    [load]
   );
 
   /** Updates reading progress locally (optimistic update) + sync with API */
@@ -97,7 +97,7 @@ export function useBooks(initialParams?: BooksQueryParams) {
                 ? Math.round((payload.progressPercent / 100) * b.totalPages)
                 : b.currentPage);
             return { ...b, currentPage: updatedPage };
-          }) ?? null,
+          }) ?? null
       }));
 
       // Sync z API w tle
@@ -110,7 +110,7 @@ export function useBooks(initialParams?: BooksQueryParams) {
         throw err;
       }
     },
-    [load],
+    [load]
   );
 
   return {
@@ -121,7 +121,7 @@ export function useBooks(initialParams?: BooksQueryParams) {
     addBook,
     editBook,
     removeBook,
-    updateBookProgress,
+    updateBookProgress
   };
 }
 
@@ -131,7 +131,7 @@ export function useStats() {
   const [state, setState] = useState<AsyncState<LibraryStats>>({
     data: null,
     loading: true,
-    error: null,
+    error: null
   });
 
   useEffect(() => {
@@ -150,7 +150,7 @@ export function useRecommendations() {
   const [state, setState] = useState<AsyncState<Recommendation[]>>({
     data: null,
     loading: true,
-    error: null,
+    error: null
   });
 
   const load = useCallback(() => {

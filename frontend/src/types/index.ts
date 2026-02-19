@@ -1,22 +1,15 @@
-/**
- * types/index.ts
- * ──────────────
- * Wspólne typy TypeScript używane w całym frontendzie.
- * Odzwierciedlają struktury danych zwracane przez REST API backendu.
- */
-
-// ── Enumeracja statusów czytania ──────────────────────────────────────
+// Enumerations of possible reading statuses for books in the library
 export type ReadingStatus = 'unread' | 'in_progress' | 'finished' | 'abandoned';
 
-/** Polskie etykiety statusów do wyświetlenia w UI */
+// Mapping of reading statuses to human-readable labels
 export const ReadingStatusLabels: Record<ReadingStatus, string> = {
   unread: 'Do przeczytania',
   in_progress: 'W trakcie',
   finished: 'Przeczytana',
-  abandoned: 'Porzucona',
+  abandoned: 'Porzucona'
 };
 
-/** Kolory MUI dla każdego statusu */
+// Mapping of reading statuses to color codes for UI representation
 export const ReadingStatusColors: Record<
   ReadingStatus,
   'default' | 'info' | 'success' | 'warning'
@@ -24,10 +17,10 @@ export const ReadingStatusColors: Record<
   unread: 'default',
   in_progress: 'info',
   finished: 'success',
-  abandoned: 'warning',
+  abandoned: 'warning'
 };
 
-// ── Model książki ─────────────────────────────────────────────────────
+// Main interface representing a book in the library system, including all relevant metadata and status information
 export interface Book {
   id: string;
   title: string;
@@ -49,7 +42,7 @@ export interface Book {
   updatedAt: string;
 }
 
-// ── DTO do tworzenia / aktualizacji ──────────────────────────────────
+// Interfaces for payloads used when creating or updating books, as well as updating reading progress. These define the expected structure of data sent to the API when performing these operations.
 export interface CreateBookPayload {
   title: string;
   author: string;
@@ -75,7 +68,7 @@ export interface UpdateProgressPayload {
   progressPercent?: number;
 }
 
-// ── Statystyki ───────────────────────────────────────────── ───────────
+// Statistics about the library, including total number of books, distribution by reading status, average rating, total pages read, and top genres. This interface defines the structure of the data returned by the API when fetching library statistics.
 export interface LibraryStats {
   total: number;
   byStatus: Record<ReadingStatus, number>;
@@ -84,14 +77,14 @@ export interface LibraryStats {
   topGenres: Array<{ genre: string; count: number }>;
 }
 
-// ── Rekomendacje ──────────────────────────────────────────────────────
+// Interface representing a book recommendation, which includes the recommended book, a relevance score, and a list of features that matched the user's preferences. This structure is used to present personalized book suggestions to users based on their reading history and preferences.
 export interface Recommendation {
   book: Book;
   score: number;
   matchedFeatures: string[];
 }
 
-// ── Parametry zapytań do API ──────────────────────────────────────────
+// Interface for query parameters when fetching a list of books, allowing for filtering by search term, reading status, genre, and sorting options. This defines the structure of the parameters that can be sent to the API to retrieve a filtered and sorted list of books from the library.
 export interface BooksQueryParams {
   search?: string;
   status?: ReadingStatus;

@@ -11,7 +11,7 @@ import {
   IconButton,
   LinearProgress,
   Tooltip,
-  Typography,
+  Typography
 } from '@mui/material';
 import React from 'react';
 import { type Book, ReadingStatusColors, ReadingStatusLabels } from '../types';
@@ -46,7 +46,7 @@ const CoverImage: React.FC<{ url: string | null; title: string }> = ({ url, titl
         justifyContent: 'center',
         background: 'linear-gradient(135deg, #1a2e42 0%, #243b55 100%)',
         flexDirection: 'column',
-        gap: 1,
+        gap: 1
       }}
     >
       <MenuBookIcon sx={{ fontSize: 64, color: 'primary.main', opacity: 0.6 }} />
@@ -66,7 +66,7 @@ const StarRating: React.FC<{ rating: number }> = ({ rating }) => (
         sx={{
           fontSize: 14,
           color: star <= rating ? 'primary.main' : 'text.secondary',
-          opacity: star <= rating ? 1 : 0.3,
+          opacity: star <= rating ? 1 : 0.3
         }}
       />
     ))}
@@ -89,7 +89,7 @@ export const BookCard = ({ book, onEditProgress, onEditDetails, onDelete }: Book
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
-        position: 'relative',
+        position: 'relative'
       }}
     >
       {/* Cover */}
@@ -116,7 +116,7 @@ export const BookCard = ({ book, onEditProgress, onEditDetails, onDelete }: Book
             display: '-webkit-box',
             WebkitLineClamp: 2,
             WebkitBoxOrient: 'vertical',
-            overflow: 'hidden',
+            overflow: 'hidden'
           }}
         >
           {book.title}
@@ -186,7 +186,7 @@ export const BookCard = ({ book, onEditProgress, onEditDetails, onDelete }: Book
           pb: 1,
           borderTop: '1px solid',
           borderColor: 'divider',
-          pt: 1,
+          pt: 1
         }}
       >
         <Tooltip title="Aktualizuj postęp czytania">

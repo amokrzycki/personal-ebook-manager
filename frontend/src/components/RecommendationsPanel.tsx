@@ -10,7 +10,7 @@ import {
   LinearProgress,
   Skeleton,
   Tooltip,
-  Typography,
+  Typography
 } from '@mui/material';
 import { useRecommendations } from '../hooks/useBooks';
 
@@ -25,7 +25,7 @@ export const RecommendationsPanel = () => {
             size={{
               xs: 12,
               sm: 6,
-              md: 4,
+              md: 4
             }}
             key={i}
           >
@@ -67,12 +67,12 @@ export const RecommendationsPanel = () => {
             size={{
               xs: 12,
               sm: 6,
-              md: 4,
+              md: 4
             }}
             key={book.id}
           >
             <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-              {/* Nagłówek z okładką */}
+              {/* Heading with cover */}
               <Box sx={{ display: 'flex', gap: 2, p: 2 }}>
                 {book.coverUrl ? (
                   <Box
@@ -84,7 +84,7 @@ export const RecommendationsPanel = () => {
                       height: 80,
                       objectFit: 'cover',
                       borderRadius: 1,
-                      flexShrink: 0,
+                      flexShrink: 0
                     }}
                   />
                 ) : (
@@ -97,7 +97,7 @@ export const RecommendationsPanel = () => {
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      flexShrink: 0,
+                      flexShrink: 0
                     }}
                   >
                     <MenuBookIcon color="primary" />
@@ -112,7 +112,7 @@ export const RecommendationsPanel = () => {
                       display: '-webkit-box',
                       WebkitLineClamp: 2,
                       WebkitBoxOrient: 'vertical',
-                      overflow: 'hidden',
+                      overflow: 'hidden'
                     }}
                   >
                     {book.title}
@@ -124,7 +124,7 @@ export const RecommendationsPanel = () => {
               </Box>
 
               <CardContent sx={{ pt: 0 }}>
-                {/* Wynik podobieństwa */}
+                {/* Score of similarity */}
                 <Tooltip title={`Wynik podobieństwa: ${(score * 100).toFixed(0)}%`}>
                   <Box>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
@@ -143,7 +143,7 @@ export const RecommendationsPanel = () => {
                   </Box>
                 </Tooltip>
 
-                {/* Dopasowane cechy */}
+                {/* Matched traits */}
                 {matchedFeatures.length > 0 && (
                   <Box sx={{ mt: 1.5, display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                     {matchedFeatures.slice(0, 4).map((f) => (

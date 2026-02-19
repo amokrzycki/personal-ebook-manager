@@ -6,13 +6,13 @@ import type {
   UpdateBookPayload,
   UpdateProgressPayload,
   LibraryStats,
-  Recommendation,
+  Recommendation
 } from '../types';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL ?? 'http://localhost:3001/api/v1',
   timeout: 15_000,
-  headers: { 'Content-Type': 'application/json' },
+  headers: { 'Content-Type': 'application/json' }
 });
 
 /**
@@ -28,7 +28,7 @@ api.interceptors.response.use(
       : (serverMessage ?? error.message);
     // We throw a new Error with a clear message
     return Promise.reject(new Error(humanMessage));
-  },
+  }
 );
 
 /** Retrieves a list of books with optional filters */

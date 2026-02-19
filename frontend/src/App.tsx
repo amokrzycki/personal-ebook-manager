@@ -11,7 +11,7 @@ import {
   Tabs,
   ThemeProvider,
   Toolbar,
-  Typography,
+  Typography
 } from '@mui/material';
 import { useState } from 'react';
 import { BookShelf } from './components/Bookshelf';
@@ -22,7 +22,7 @@ import { theme } from './theme';
 const NAV_TABS = [
   { label: 'Moja Biblioteka', icon: <LibraryBooksIcon /> },
   { label: 'Statystyki', icon: <BarChartIcon /> },
-  { label: 'Rekomendacje', icon: <AutoAwesomeIcon /> },
+  { label: 'Rekomendacje', icon: <AutoAwesomeIcon /> }
 ];
 
 const App = () => {
@@ -38,7 +38,7 @@ const App = () => {
         sx={{
           borderBottom: '1px solid',
           borderColor: 'divider',
-          bgcolor: 'background.paper',
+          bgcolor: 'background.paper'
         }}
       >
         <Toolbar sx={{ gap: 2 }}>
@@ -50,7 +50,7 @@ const App = () => {
               color: 'primary.main',
               fontWeight: 700,
               letterSpacing: '0.02em',
-              mr: 'auto',
+              mr: 'auto'
             }}
           >
             BookShelf
@@ -62,7 +62,7 @@ const App = () => {
             sx={{
               '& .MuiTab-root': { minHeight: 64, textTransform: 'none', fontWeight: 500 },
               '& .Mui-selected': { color: 'primary.main' },
-              '& .MuiTabs-indicator': { bgcolor: 'primary.main' },
+              '& .MuiTabs-indicator': { bgcolor: 'primary.main' }
             }}
           >
             {NAV_TABS.map((tab) => (
@@ -81,7 +81,7 @@ const App = () => {
             linear-gradient(rgba(201,168,76,0.02) 1px, transparent 1px),
             linear-gradient(90deg, rgba(201,168,76,0.02) 1px, transparent 1px)
           `,
-          backgroundSize: '40px 40px',
+          backgroundSize: '40px 40px'
         }}
       >
         <Container maxWidth="xl" sx={{ py: 4 }}>

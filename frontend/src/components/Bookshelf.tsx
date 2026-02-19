@@ -20,7 +20,7 @@ import {
   TextField,
   ToggleButton,
   ToggleButtonGroup,
-  Typography,
+  Typography
 } from '@mui/material';
 import { useCallback, useEffect, useState } from 'react';
 import { useBooks } from '../hooks/useBooks';
@@ -30,7 +30,7 @@ import { AddBookDialog } from './AddBookDialog';
 import { BookCard } from './BookCard';
 import { ProgressDialog } from './ProgressDialog';
 
-/** Typ stanu modali */
+// Modal state type
 type DialogState =
   | { type: 'none' }
   | { type: 'add' }
@@ -47,7 +47,6 @@ export const BookShelf = () => {
   const [dialog, setDialog] = useState<DialogState>({ type: 'none' });
   const [actionError, setActionError] = useState<string | null>(null);
 
-  // Debounce wyszukiwania (300ms)
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedSearch(search), 300);
     return () => clearTimeout(timer);
@@ -56,15 +55,14 @@ export const BookShelf = () => {
   const { books, loading, error, addBook, editBook, removeBook, updateBookProgress, refresh } =
     useBooks();
 
-  // Odśwież listę gdy zmienią się parametry filtrów/sortowania
+  // Refresh data when filters/sorting change
   useEffect(() => {
     refresh({
       search: debouncedSearch || undefined,
       status: (statusFilter as ReadingStatus) || undefined,
       sortBy,
-      order,
+      order
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearch, statusFilter, sortBy, order]);
 
   const handleAdd = useCallback(
@@ -72,7 +70,7 @@ export const BookShelf = () => {
       setActionError(null);
       await addBook(payload);
     },
-    [addBook],
+    [addBook]
   );
 
   const handleEdit = useCallback(
@@ -81,7 +79,7 @@ export const BookShelf = () => {
       setActionError(null);
       await editBook(dialog.book.id, payload);
     },
-    [dialog, editBook],
+    [dialog, editBook]
   );
 
   const handleDelete = useCallback(async () => {
@@ -99,22 +97,22 @@ export const BookShelf = () => {
     async (bookId: string, currentPage: number) => {
       await updateBookProgress(bookId, { currentPage });
     },
-    [updateBookProgress],
+    [updateBookProgress]
   );
 
   return (
     <Box>
-      {/* ── Pasek narzędzi (filtry + dodaj) ─────────────────────────── */}
+      {/* Toolbar */}
       <Box
         sx={{
           display: 'flex',
           gap: 2,
           mb: 3,
           flexWrap: 'wrap',
-          alignItems: 'center',
+          alignItems: 'center'
         }}
       >
-        {/* Wyszukiwarka */}
+        {/* Search */}
         <TextField
           size="small"
           placeholder="Szukaj tytułu lub autora…"
@@ -126,11 +124,11 @@ export const BookShelf = () => {
               <InputAdornment position="start">
                 <SearchIcon fontSize="small" />
               </InputAdornment>
-            ),
+            )
           }}
         />
 
-        {/* Filtr statusu */}
+        {/* Status filter */}
         <FormControl size="small" sx={{ minWidth: 160 }}>
           <InputLabel>
             <FilterListIcon sx={{ fontSize: 16, mr: 0.5 }} />
@@ -150,7 +148,7 @@ export const BookShelf = () => {
           </Select>
         </FormControl>
 
-        {/* Sortowanie */}
+        {/* Sorting */}
         <FormControl size="small" sx={{ minWidth: 140 }}>
           <InputLabel>
             <SortIcon sx={{ fontSize: 16, mr: 0.5 }} />
@@ -168,7 +166,7 @@ export const BookShelf = () => {
           </Select>
         </FormControl>
 
-        {/* Kierunek sortowania */}
+        {/* Sorting order */}
         <ToggleButtonGroup
           size="small"
           value={order}
@@ -179,7 +177,7 @@ export const BookShelf = () => {
           <ToggleButton value="ASC">↑</ToggleButton>
         </ToggleButtonGroup>
 
-        {/* Przycisk Dodaj */}
+        {/* Add button */}
         <Button
           variant="contained"
           startIcon={<AddIcon />}
@@ -190,14 +188,13 @@ export const BookShelf = () => {
         </Button>
       </Box>
 
-      {/* ── Lista błędów ─────────────────────────────────────────────── */}
+      {/* Number of errors */}
       {(error || actionError) && (
         <Alert severity="error" sx={{ mb: 2 }}>
           {error ?? actionError}
         </Alert>
       )}
 
-      {/* ── Siatka kart ─────────────────────────────────────────────── */}
       {loading ? (
         <Grid container spacing={2}>
           {[...Array(6)].map((_, i) => (
@@ -206,7 +203,7 @@ export const BookShelf = () => {
                 xs: 12,
                 sm: 6,
                 md: 4,
-                lg: 3,
+                lg: 3
               }}
               key={i}
             >
@@ -231,7 +228,7 @@ export const BookShelf = () => {
                 xs: 12,
                 sm: 6,
                 md: 4,
-                lg: 3,
+                lg: 3
               }}
               key={book.id}
             >
@@ -246,16 +243,16 @@ export const BookShelf = () => {
         </Grid>
       )}
 
-      {/* ── Modale ──────────────────────────────────────────────────── */}
+      {/* Modals */}
 
-      {/* Dialog dodawania */}
+      {/* Add dialog */}
       <AddBookDialog
         open={dialog.type === 'add'}
         onClose={() => setDialog({ type: 'none' })}
         onSubmit={handleAdd}
       />
 
-      {/* Dialog edycji */}
+      {/* Edit dialog */}
       <AddBookDialog
         open={dialog.type === 'edit'}
         editBook={dialog.type === 'edit' ? dialog.book : null}
@@ -263,7 +260,7 @@ export const BookShelf = () => {
         onSubmit={handleEdit}
       />
 
-      {/* Dialog postępu */}
+      {/* Progress dialog */}
       <ProgressDialog
         open={dialog.type === 'progress'}
         book={dialog.type === 'progress' ? dialog.book : null}
@@ -271,7 +268,7 @@ export const BookShelf = () => {
         onSave={handleProgressSave}
       />
 
-      {/* Potwierdzenie usuwania */}
+      {/* Confirm deleting */}
       <Dialog open={dialog.type === 'delete'} onClose={() => setDialog({ type: 'none' })}>
         <DialogTitle>Usuń książkę</DialogTitle>
         <DialogContent>
