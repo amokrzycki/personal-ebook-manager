@@ -7,11 +7,12 @@ import {
   IsOptional,
   IsString,
   IsUrl,
+  IsUUID,
   Max,
   MaxLength,
   Min,
 } from 'class-validator';
-import { ReadingStatus } from '../entities/book.entity';
+import { ReadingStatus, BookFormat } from '../entities/book.entity';
 
 export class CreateBookDto {
   @IsString()
@@ -33,6 +34,7 @@ export class CreateBookDto {
 
   @IsOptional()
   @IsISBN()
+  @MaxLength(20)
   isbn?: string;
 
   @IsOptional()
@@ -42,6 +44,7 @@ export class CreateBookDto {
 
   @IsOptional()
   @IsUrl()
+  @MaxLength(512)
   coverUrl?: string;
 
   @IsOptional()
@@ -61,6 +64,22 @@ export class CreateBookDto {
   totalPages?: number;
 
   @IsOptional()
+  @IsEnum(BookFormat)
+  format?: BookFormat;
+
+  // Audio-specific metadata
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  audioDurationSeconds?: number;
+
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  audioProgressSeconds?: number;
+
+  // Classification and tags
+  @IsOptional()
   @IsArray()
   @IsString({ each: true })
   genres?: string[];
@@ -70,6 +89,7 @@ export class CreateBookDto {
   @IsString({ each: true })
   tags?: string[];
 
+  // Progress and rating
   @IsOptional()
   @IsEnum(ReadingStatus)
   status?: ReadingStatus;
@@ -84,4 +104,12 @@ export class CreateBookDto {
   @Min(1)
   @Max(5)
   rating?: number;
+
+  /* IDs of shelves to which the book is to be assigned when created.
+   * We accept a UUID array in accordance with the ManyToMany relationship.
+   */
+  @IsOptional()
+  @IsArray()
+  @IsUUID('4', { each: true })
+  shelfIds?: string[];
 }

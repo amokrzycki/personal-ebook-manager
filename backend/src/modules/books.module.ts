@@ -5,9 +5,10 @@ import { Book } from '../entities/book.entity';
 import { BooksService } from '../services/books.service';
 import { RecommendationsService } from '../services/recommendations.service';
 import { GoogleBooksModule } from './google-books.module';
+import { ShelvesModule } from './shelves.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Book]), GoogleBooksModule],
+  imports: [TypeOrmModule.forFeature([Book]), GoogleBooksModule, ShelvesModule],
   controllers: [BooksController],
   providers: [BooksService, RecommendationsService],
   exports: [BooksService],

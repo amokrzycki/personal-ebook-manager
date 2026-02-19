@@ -1,7 +1,24 @@
-// Enumerations of possible reading statuses for books in the library
+export type BookFormat = 'epub' | 'mobi' | 'pdf' | 'azw' | 'cbr' | 'cbz' | 'mp3' | 'm4b' | 'other';
+
+export const AUDIO_FORMATS: BookFormat[] = ['mp3', 'm4b'];
+
+export const BookFormatLabels: Record<BookFormat, string> = {
+  epub: 'EPUB', mobi: 'MOBI', pdf: 'PDF',
+  azw: 'AZW', cbr: 'CBR', cbz: 'CBZ',
+  mp3: 'MP3 Audio', m4b: 'M4B Audio', other: 'Inny'
+};
+
+/** Kolory chipów formatów */
+export const BookFormatColors: Record<BookFormat, string> = {
+  epub: '#4A90D9', mobi: '#7B68EE', pdf: '#E74C3C',
+  azw: '#F39C12', cbr: '#27AE60', cbz: '#16A085',
+  mp3: '#8E44AD', m4b: '#6C3483', other: '#7F8C8D'
+};
+
+// ── Statusy czytania ────────────────────────────────────────────────
+
 export type ReadingStatus = 'unread' | 'in_progress' | 'finished' | 'abandoned';
 
-// Mapping of reading statuses to human-readable labels
 export const ReadingStatusLabels: Record<ReadingStatus, string> = {
   unread: 'Do przeczytania',
   in_progress: 'W trakcie',
@@ -9,18 +26,33 @@ export const ReadingStatusLabels: Record<ReadingStatus, string> = {
   abandoned: 'Porzucona'
 };
 
-// Mapping of reading statuses to color codes for UI representation
-export const ReadingStatusColors: Record<
-  ReadingStatus,
-  'default' | 'info' | 'success' | 'warning'
-> = {
-  unread: 'default',
-  in_progress: 'info',
-  finished: 'success',
-  abandoned: 'warning'
+export const ReadingStatusColors: Record<ReadingStatus, 'default' | 'info' | 'success' | 'warning'> = {
+  unread: 'default', in_progress: 'info', finished: 'success', abandoned: 'warning'
 };
 
-// Main interface representing a book in the library system, including all relevant metadata and status information
+// ── Wirtualna półka ─────────────────────────────────────────────────
+
+export interface Shelf {
+  id: string;
+  name: string;
+  description: string | null;
+  color: string;
+  icon: string;
+  bookCount?: number;
+  books?: Book[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateShelfPayload {
+  name: string;
+  description?: string;
+  color?: string;
+  icon?: string;
+}
+
+// ── Model książki ───────────────────────────────────────────────────
+
 export interface Book {
   id: string;
   title: string;
@@ -38,6 +70,13 @@ export interface Book {
   status: ReadingStatus;
   currentPage: number;
   rating: number | null;
+  format: BookFormat;
+  audioDurationSeconds: number | null;
+  audioProgressSeconds: number;
+  readingProgressPercent: number;
+  audioProgressPercent: number;
+  isAudiobook: boolean;
+  shelves: Shelf[];
   createdAt: string;
   updatedAt: string;
 }
@@ -59,6 +98,10 @@ export interface CreateBookPayload {
   status?: ReadingStatus;
   currentPage?: number;
   rating?: number;
+  format?: BookFormat;
+  audioDurationSeconds?: number;
+  audioProgressSeconds?: number;
+  shelfIds?: string[];
 }
 
 export type UpdateBookPayload = Partial<CreateBookPayload>;
@@ -66,29 +109,65 @@ export type UpdateBookPayload = Partial<CreateBookPayload>;
 export interface UpdateProgressPayload {
   currentPage?: number;
   progressPercent?: number;
+  audioProgressSeconds?: number;
 }
 
-// Statistics about the library, including total number of books, distribution by reading status, average rating, total pages read, and top genres. This interface defines the structure of the data returned by the API when fetching library statistics.
-export interface LibraryStats {
-  total: number;
-  byStatus: Record<ReadingStatus, number>;
-  avgRating: number | null;
-  totalPagesRead: number;
-  topGenres: Array<{ genre: string; count: number }>;
-}
+// ── Parametry filtrowania ────────────────────────────────────────────
 
-// Interface representing a book recommendation, which includes the recommended book, a relevance score, and a list of features that matched the user's preferences. This structure is used to present personalized book suggestions to users based on their reading history and preferences.
-export interface Recommendation {
-  book: Book;
-  score: number;
-  matchedFeatures: string[];
-}
-
-// Interface for query parameters when fetching a list of books, allowing for filtering by search term, reading status, genre, and sorting options. This defines the structure of the parameters that can be sent to the API to retrieve a filtered and sorted list of books from the library.
 export interface BooksQueryParams {
   search?: string;
   status?: ReadingStatus;
   genre?: string;
-  sortBy?: 'title' | 'author' | 'rating' | 'createdAt' | 'status';
+  tag?: string;
+  format?: BookFormat;
+  author?: string;
+  series?: string;
+  minRating?: number;
+  maxRating?: number;
+  shelfId?: string;
+  sortBy?: 'title' | 'author' | 'rating' | 'createdAt' | 'status' | 'format';
   order?: 'ASC' | 'DESC';
+}
+
+// ── Statystyki ───────────────────────────────────────────────────────
+
+export interface LibraryStats {
+  total: number;
+  byStatus: Record<ReadingStatus, number>;
+  byFormat: Record<BookFormat, number>;
+  avgRating: number | null;
+  totalPagesRead: number;
+  totalAudioHours: number;
+  avgReadingProgress: number;
+  finishedThisMonth: number;
+  topGenres: Array<{ genre: string; count: number }>;
+  topTags: Array<{ tag: string; count: number }>;
+}
+
+// ── Rekomendacje ─────────────────────────────────────────────────────
+
+export interface Recommendation {
+  book: Book | Partial<Book>;
+  score: number;
+  matchedFeatures: string[];
+  isExternal: boolean;
+}
+
+// ── Helpers ──────────────────────────────────────────────────────────
+
+/** Formatuje sekundy jako HH:MM:SS lub MM:SS */
+export function formatDuration(seconds: number): string {
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = seconds % 60;
+  if (h > 0) return `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+  return `${m}:${String(s).padStart(2, '0')}`;
+}
+
+/** Formatuje sekundy jako "X godz. Y min." */
+export function formatDurationHuman(seconds: number): string {
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  if (h > 0) return `${h} godz. ${m} min.`;
+  return `${m} min.`;
 }

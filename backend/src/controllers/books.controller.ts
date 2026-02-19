@@ -1,8 +1,5 @@
 /**
- * books.controller.ts
- * ───────────────────
  * REST API controller exposing endpoints for managing the library.
- *
  * Endpoints:
  * ─────────────────────────────────────────────────────────────────────
  * GET    /books                  – list books (with filtering and sorting)
