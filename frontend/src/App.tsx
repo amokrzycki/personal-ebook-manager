@@ -1,115 +1,94 @@
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import BarChartIcon from '@mui/icons-material/BarChart';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import {
-  AppBar,
-  Box,
-  Container,
-  CssBaseline,
-  Tab,
-  Tabs,
-  ThemeProvider,
-  Toolbar,
-  Typography
+  AppBar, Box, Container, CssBaseline,
+  Tab, Tabs, ThemeProvider, Toolbar, Typography
 } from '@mui/material';
 import { useState } from 'react';
 import { BookShelf } from './components/Bookshelf';
 import { RecommendationsPanel } from './components/RecommendationsPanel';
+import { ShelvesManager } from './components/ShelvesManager';
 import { StatsDashboard } from './components/StatsDashboard';
 import { theme } from './theme';
 
-const NAV_TABS = [
-  { label: 'Moja Biblioteka', icon: <LibraryBooksIcon /> },
+const TABS = [
+  { label: 'Biblioteka', icon: <LibraryBooksIcon /> },
+  { label: 'Półki', icon: <BookmarkIcon /> },
   { label: 'Statystyki', icon: <BarChartIcon /> },
   { label: 'Rekomendacje', icon: <AutoAwesomeIcon /> }
 ];
 
 const App = () => {
-  const [activeTab, setActiveTab] = useState(0);
+  const [tab, setTab] = useState(0);
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
 
-      <AppBar
-        position="sticky"
-        elevation={0}
-        sx={{
-          borderBottom: '1px solid',
-          borderColor: 'divider',
-          bgcolor: 'background.paper'
-        }}
-      >
+      <AppBar position="sticky" elevation={0}
+              sx={{ borderBottom: '1px solid', borderColor: 'divider', bgcolor: 'background.paper' }}>
         <Toolbar sx={{ gap: 2 }}>
-          <MenuBookIcon sx={{ color: 'primary.main', fontSize: 32 }} />
-          <Typography
-            variant="h5"
-            sx={{
-              fontFamily: '"Playfair Display", serif',
-              color: 'primary.main',
-              fontWeight: 700,
-              letterSpacing: '0.02em',
-              mr: 'auto'
-            }}
-          >
+          <MenuBookIcon sx={{ color: 'primary.main', fontSize: 30 }} />
+          <Typography variant="h5" sx={{
+            fontFamily: '"Playfair Display", serif', color: 'primary.main',
+            fontWeight: 700, letterSpacing: '0.02em', mr: 'auto'
+          }}>
             BookShelf
           </Typography>
 
-          <Tabs
-            value={activeTab}
-            onChange={(_, v) => setActiveTab(v)}
-            sx={{
-              '& .MuiTab-root': { minHeight: 64, textTransform: 'none', fontWeight: 500 },
-              '& .Mui-selected': { color: 'primary.main' },
-              '& .MuiTabs-indicator': { bgcolor: 'primary.main' }
-            }}
-          >
-            {NAV_TABS.map((tab) => (
-              <Tab key={tab.label} label={tab.label} icon={tab.icon} iconPosition="start" />
+          <Tabs value={tab} onChange={(_, v) => setTab(v)} sx={{
+            '& .MuiTab-root': { minHeight: 64, textTransform: 'none', fontWeight: 500, minWidth: 100 },
+            '& .Mui-selected': { color: 'primary.main' },
+            '& .MuiTabs-indicator': { bgcolor: 'primary.main' }
+          }}>
+            {TABS.map((t) => (
+              <Tab key={t.label} label={t.label} icon={t.icon} iconPosition="start" />
             ))}
           </Tabs>
         </Toolbar>
       </AppBar>
 
-      <Box
-        component="main"
-        sx={{
-          minHeight: '100vh',
-          bgcolor: 'background.default',
-          backgroundImage: `
-            linear-gradient(rgba(201,168,76,0.02) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(201,168,76,0.02) 1px, transparent 1px)
-          `,
-          backgroundSize: '40px 40px'
-        }}
-      >
+      <Box component="main" sx={{
+        minHeight: '100vh', bgcolor: 'background.default',
+        backgroundImage: `
+          linear-gradient(rgba(201,168,76,0.015) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(201,168,76,0.015) 1px, transparent 1px)
+        `,
+        backgroundSize: '40px 40px'
+      }}>
         <Container maxWidth="xl" sx={{ py: 4 }}>
-          {activeTab === 0 && (
+          {tab === 0 && (
             <Box>
-              <Typography variant="h4" gutterBottom sx={{ mb: 3 }}>
-                Moja Biblioteka
-              </Typography>
+              <Typography variant="h4" gutterBottom sx={{ mb: 3 }}>Moja Biblioteka</Typography>
               <BookShelf />
             </Box>
           )}
 
-          {activeTab === 1 && (
+          {tab === 1 && (
             <Box>
-              <Typography variant="h4" gutterBottom sx={{ mb: 3 }}>
-                Statystyki Biblioteki
+              <Typography variant="h4" gutterBottom sx={{ mb: 1 }}>Wirtualne Półki</Typography>
+              <Typography color="text.secondary" sx={{ mb: 3 }}>
+                Organizuj książki w kolekcje tematyczne. Jedna książka może być na wielu półkach jednocześnie.
               </Typography>
+              <ShelvesManager />
+            </Box>
+          )}
+
+          {tab === 2 && (
+            <Box>
+              <Typography variant="h4" gutterBottom sx={{ mb: 3 }}>Statystyki Czytelnictwa</Typography>
               <StatsDashboard />
             </Box>
           )}
 
-          {activeTab === 2 && (
+          {tab === 3 && (
             <Box>
-              <Typography variant="h4" gutterBottom>
-                Rekomendacje dla Ciebie
-              </Typography>
+              <Typography variant="h4" gutterBottom sx={{ mb: 1 }}>Rekomendacje dla Ciebie</Typography>
               <Typography color="text.secondary" sx={{ mb: 3 }}>
-                Propozycje oparte na Twoich ulubionych gatunkach i tagach.
+                Analizuję Twoje ulubione gatunki, tagi i autorów. Propozycje z biblioteki + Google Books API.
               </Typography>
               <RecommendationsPanel />
             </Box>
