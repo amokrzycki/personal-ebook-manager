@@ -4,7 +4,24 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
+import { Shelf } from './shelf.entity';
+
+export enum BookFormat {
+  EPUB = 'epub',
+  MOBI = 'mobi',
+  PDF = 'pdf',
+  AZW = 'azw',
+  CBR = 'cbr',
+  CBZ = 'cbz',
+  MP3 = 'mp3',
+  M4B = 'm4b',
+  OTHER = 'other',
+}
+
+export const AUDIO_FORMATS = new Set([BookFormat.MP3, BookFormat.M4B]);
 
 /** Possible reading progress statuses */
 export enum ReadingStatus {
@@ -57,6 +74,19 @@ export class Book {
   @Column({ type: 'int', nullable: true })
   totalPages: number | null;
 
+  @Column({ type: 'varchar', default: BookFormat.OTHER })
+  format: BookFormat;
+
+  // Audio-specific metadata
+
+  // Total duration in seconds (for audiobooks) – used to calculate listening progress
+  @Column({ type: 'int', nullable: true })
+  audioDurationSeconds: number | null;
+
+  // Current listening position in seconds (for audiobooks)
+  @Column({ type: 'int', default: 0 })
+  audioProgressSeconds: number;
+
   // Classification and tags
 
   /**
@@ -88,6 +118,11 @@ export class Book {
    */
   @Column({ type: 'float', nullable: true })
   rating: number | null;
+
+  // Virtual Shelf's
+  @ManyToMany(() => Shelf, (shelf) => shelf.books, { eager: false })
+  @JoinTable({ name: 'book_shelves' })
+  shelves: Shelf[];
 
   /** Date when the book was added to the library */
   @CreateDateColumn()
